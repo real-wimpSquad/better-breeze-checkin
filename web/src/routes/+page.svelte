@@ -156,7 +156,7 @@
 		const kidNames = selectedKids.map((k) => k.force_first_name || k.first_name).join(', ');
 		const extraLabels: LabelData[] = [
 			{
-				name: `${lastName} Family`,
+				name: lastName,
 				code: familyCode,
 				extra: kidNames
 			}
