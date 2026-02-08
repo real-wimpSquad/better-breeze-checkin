@@ -6,6 +6,7 @@ from datetime import datetime
 from dataclasses import dataclass
 from pathlib import Path
 
+import qrcode
 from PIL import Image, ImageDraw, ImageFont
 
 from .config import get_settings
@@ -136,16 +137,42 @@ def render_kid_label(label: LabelData, timestamp: str) -> Image.Image:
     return img
 
 
+def _render_parent_half(draw: ImageDraw.ImageDraw, img: Image.Image,
+                        x_offset: int, width: int, height: int,
+                        code: str, timestamp: str):
+    """Draw one half of a parent tear-off: QR + code + timestamp, no names."""
+    cx = x_offset + width // 2
+    margin = 20
+
+    # QR code
+    qr = qrcode.QRCode(box_size=6, border=1, error_correction=qrcode.constants.ERROR_CORRECT_M)
+    qr.add_data(code)
+    qr.make(fit=True)
+    qr_img = qr.make_image(fill_color="black", back_color="white").convert("RGB")
+    qr_size = min(qr_img.size[0], height - 200)
+    qr_img = qr_img.resize((qr_size, qr_size), Image.NEAREST)
+
+    # Vertical layout: QR centered, code below, timestamp at bottom
+    qr_y = margin + 10
+    img.paste(qr_img, (cx - qr_size // 2, qr_y))
+
+    y = qr_y + qr_size + 15
+    _draw_centered(draw, cx, y, code, _get_font(48))
+    y += 60
+
+    _draw_centered(draw, cx, y, timestamp, _get_font(30), fill="#888888")
+
+
 def render_parent_label(label: LabelData, timestamp: str) -> Image.Image:
-    """Two-half tear-off label for parent — divider down the middle."""
+    """Two-half tear-off label for parent — QR + code + timestamp, no names."""
     img = Image.new("RGB", (LABEL_W, LABEL_H), "white")
     draw = ImageDraw.Draw(img)
 
     half_w = DIVIDER_X
-    _draw_section(draw, 0, half_w, LABEL_H, label.name, label.code, label.extra, timestamp)
+    _render_parent_half(draw, img, 0, half_w, LABEL_H, label.code, timestamp)
     draw.line([(DIVIDER_X, 10), (DIVIDER_X, LABEL_H - 10)],
               fill="#cccccc", width=2)
-    _draw_section(draw, DIVIDER_X, half_w, LABEL_H, label.name, label.code, label.extra, timestamp)
+    _render_parent_half(draw, img, DIVIDER_X, half_w, LABEL_H, label.code, timestamp)
 
     return img
 

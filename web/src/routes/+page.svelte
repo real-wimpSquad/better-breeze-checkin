@@ -151,14 +151,12 @@
 			code: familyCode
 		}));
 
-		// Build parent label (extra, no attendance)
-		const lastName = selectedKids[0].last_name;
-		const kidNames = selectedKids.map((k) => k.force_first_name || k.first_name).join(', ');
+		// Build parent label (no names — just code for pickup verification)
 		const extraLabels: LabelData[] = [
 			{
-				name: lastName,
+				name: '',
 				code: familyCode,
-				extra: kidNames
+				extra: 'parent'
 			}
 		];
 
