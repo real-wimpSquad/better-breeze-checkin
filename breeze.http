@@ -1,0 +1,37 @@
+### Variables
+@base = https://connectionpointchurch.breezechms.com/api
+@key = {{$dotenv CHECKIN_BREEZE_API_KEY}}
+
+### List attendance for an event instance
+POST {{base}}/events/attendance/list?instance_id={{instance_id}}
+Api-Key: {{key}}
+
+### Delete attendance — all people from an event instance
+# Set instance_id below, then run "List attendance" above to get person_ids
+# @name listForDelete
+POST {{base}}/events/attendance/list?instance_id={{instance_id}}
+Api-Key: {{key}}
+
+### Delete attendance — single person from event instance
+POST {{base}}/events/attendance/delete?instance_id={{instance_id}}&person_id={{person_id}}
+Api-Key: {{key}}
+
+### Add attendance
+POST {{base}}/events/attendance/add?instance_id={{instance_id}}&person_id={{person_id}}
+Api-Key: {{key}}
+
+### List events (today)
+GET {{base}}/events?start={{$datetime iso8601 0 d}}
+Api-Key: {{key}}
+
+### List events (custom date range)
+GET {{base}}/events?start={{start_date}}&end={{end_date}}
+Api-Key: {{key}}
+
+### Get eligible people for check-in
+POST {{base}}/events/attendance/eligible?instance_id={{instance_id}}
+Api-Key: {{key}}
+
+### Get person details
+GET {{base}}/people?details=1&filter_json={"id":"{{person_id}}"}
+Api-Key: {{key}}

@@ -1,4 +1,4 @@
-.PHONY: install backend frontend dev
+.PHONY: install backend frontend dev docker-up docker-down
 
 install:
 	pip install -r requirements.txt
@@ -12,3 +12,9 @@ frontend:
 
 dev:
 	$(MAKE) -j2 backend frontend
+
+docker-up:
+	docker compose up --build -d
+
+docker-down:
+	docker compose down

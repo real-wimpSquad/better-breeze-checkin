@@ -1,0 +1,17 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    env_file: .env
+    network_mode: host
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./web
+    ports:
+      - "5173:3000"
+    depends_on:
+      - api
+    restart: unless-stopped

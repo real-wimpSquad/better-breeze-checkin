@@ -1,0 +1,17 @@
+.git/
+.gitignore
+.env
+.env.*
+!.env.example
+node_modules/
+.svelte-kit/
+build/
+__pycache__/
+*.pyc
+.DS_Store
+*.egg-info/
+dist/
+.vite/
+vite.config.*.timestamp-*
+plans/
+.claude/
